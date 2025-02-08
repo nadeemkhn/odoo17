@@ -1,0 +1,23 @@
+<odoo>
+    <menuitem id="menu_sales_dashboard" name="Sales Dashboard" parent="my_parent_menu" action="action_sales_dashboard"/>
+
+    <record id="action_sales_dashboard" model="ir.actions.act_window">
+        <field name="name">Sales Dashboard</field>
+        <field name="res_model">ir.ui.view</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="My_company.view_dashboard_form"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="view_dashboard_form" model="ir.ui.view">
+        <field name="name">Dashboard Form</field>
+        <field name="model">ir.ui.view</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="arch" type="xml">
+                    <t t-call="My_company.DashboardTemplate"/>
+                </field>
+            </form>
+        </field>
+    </record>
+</odoo>

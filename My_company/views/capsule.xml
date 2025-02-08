@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="capsule_action" model="ir.actions.act_window">
+            <field name="name">Medicine view</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">medical.medicine</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('medicine_type', '=', 'capsule')]</field>
+
+        </record>
+
+
+        <menuitem id="capsule_id" name="capsule" parent="menu_item_medicine" action="capsule_action"
+                  sequence="03"/>
+
+    </data>
+</odoo>
+

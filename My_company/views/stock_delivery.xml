@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_view_form" model="ir.ui.view">
+        <field name="name">stock.order.form</field>
+        <field name="model">stock.delivery</field>
+        <field name="arch" type="xml">
+            <form string="Stock Order">
+                <header>
+
+                    <button name="action_draft" string="Draft" type="object" class="btn-success"
+                            invisible="state != 'cancel'"/>
+                    <button name="action_waiting" string="Wait" type="object" class="btn-primary"
+                            invisible="state != ''"/>
+                    <button name="action_cancel" string="Cancel" type="object" class="btn-danger"
+                            invisible="state not in ('draft', 'validate')"/>
+                    <button name="action_done" string="Done" type="object" class="btn-primary"
+                            invisible="state != ''"/>
+                    <button name="action_validate" string="Validate" class="btn-primary" type="object"
+                            invisible="state not in ('draft', 'cancel')"/>
+
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,done,cancel"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sequence" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+
+                        <field name="partner_id" string="Customer"
+                               invisible="picking_type != 'sale'"/>
+                        <field name="supplier_id" string="Receive From"
+                               invisible="picking_type != 'purchase'"/>
+                        <field name="Schedule_date"/>
+                        <field name="confirm_date"/>
+                        <field name="picking_type" invisible="1"/>
+
+                    </group>
+                    <notebook>
+                        <page string="Order Lines">
+                            <field name="stock_delivery">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="demand_qty"/>
+                                    <field name="done_qty"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_order_delivery_view_tree" model="ir.ui.view">
+        <field name="name">stock_view_tree</field>
+        <field name="model">stock.delivery</field>
+        <field name="arch" type="xml">
+            <tree string="Stock Deliveries" multi_edit="1">
+                <field name="sequence"/>
+                <field name="picking_type" widget="badge"
+                       decoration-danger="picking_type == 'sale'"
+                       decoration-primary="picking_type == 'purchase'"/>
+                <field name="partner_id" invisible="picking_type != 'sale'"/>
+                <field name="supplier_id" invisible="picking_type != 'purchase'"/>
+                <field name="Schedule_date"/>
+                <field name="confirm_date"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'cancel'"
+                       decoration-success="state == 'validate'"
+                       decoration-primary="state == 'done'"
+                       decoration-info="state == 'sent'"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="delivery_id_search_view" model="ir.ui.view">
+        <field name="name">Delivery Search</field>
+        <field name="model">stock.delivery</field>
+        <field name="arch" type="xml">
+            <search string="">
+                <field name="sequence" string="Sequence"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="supplier_id" string="Supplier"/>
+                <separator>
+                    <filter string="Purchase" name="picking_type" domain="[('picking_type', '=', 'purchase')]"/>
+                </separator>
+                <separator>
+                    <filter string="Sale" name="picking_type" domain="[('picking_type', '=', 'sale')]"/>
+                </separator>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_delivery" model="ir.actions.act_window">
+        <field name="name">Stock Order</field>
+        <field name="res_model">stock.delivery</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_stock_delivery" name="Stock Deliveruy" parent="my_parent_menu"
+              action="action_stock_delivery"
+              sequence="3"/>
+</odoo>

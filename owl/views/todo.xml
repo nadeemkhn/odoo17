@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_todo_form" model="ir.ui.view">
+            <field name="name">todo.todo.form</field>
+            <field name="model">todo.app</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="color" widget="color"/>
+                            <field name="completed"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_todo_tree" model="ir.ui.view">
+            <field name="name">todo.todo.tree</field>
+            <field name="model">todo.app</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="color" widget="color"/>
+
+                </tree>
+            </field>
+        </record>
+        <record id="view_todo_kanban" model="ir.ui.view">
+            <field name="name">todo.todo.kanban</field>
+            <field name="model">todo.app</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="completed" class="o_kanban_color_red">
+                    <field name="name"/>
+                    <field name="color"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-att-class="'o_kanban_record ' + ('o_kanban_card_green' if record.completed.raw_value else '')">
+                                <div class="o_kanban_details">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                    <br/>
+                                    <field name="completed"/>
+                                    <field name="color" widget="color"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_todo" model="ir.actions.act_window">
+            <field name="name">To-Do Tasks</field>
+            <field name="res_model">todo.app</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <menuitem id="menu_todo_root" name="To-Do" sequence="1"/>
+        <menuitem id="menu_todo_tasks" name="Tasks" parent="menu_todo_root" action="action_todo"/>
+
+
+    </data>
+</odoo>

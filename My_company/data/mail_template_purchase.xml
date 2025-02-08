@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="purchase_mail_template" model="mail.template">
+    <field name="name">Purchase  Email Template</field>
+    <field name="email_from">${object.company_id | safe}</field>
+    <field name="subject">{{object.sequence_purchase}}</field>
+    <field name="model_id" ref="model_medical_purchase_order"/>
+    <field name="body_html">
+        <![CDATA[
+            <p>Dear ${object.sequence_purchase},</p>
+            <p>Your gate pass has been generated.</p>
+        ]]>
+    </field>
+</record>
+
+
+</odoo>

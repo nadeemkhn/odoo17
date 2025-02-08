@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <record id="report_sale_order" model="ir.actions.report">
+            <field name="name">sale reports</field>
+            <field name="model">medical.sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">My_company.report_sale_order_template</field>
+            <field name="report_file">My_company.report_sale_order_template</field>
+            <field name="binding_model_id" ref="model_medical_sale_order"/>
+        </record>
+
+        <record id="report_sale_order_wizard" model="ir.actions.report">
+            <field name="name">sale reports wizard</field>
+            <field name="model">sale.order.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">My_company.report_sale_order_template</field>
+            <field name="report_file">My_company.report_sale_order_template</field>
+            <field name="binding_model_id" ref="model_sale_order_report_wizard"/>
+        </record>
+
+        <record id="report_purchase_order" model="ir.actions.report">
+            <field name="name">Purchase reports</field>
+            <field name="model">medical.purchase.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">My_company.report_purchase_order_template</field>
+            <field name="report_file">My_company.report_purchase_order_template</field>
+            <field name="binding_model_id" ref="model_medical_purchase_order"/>
+        </record>
+
+
+         <record id="report_medicine_template_id" model="ir.actions.report">
+            <field name="name">Purchase reports</field>
+            <field name="model">medical.medicine</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">My_company.report_medicine_order_template</field>
+            <field name="report_file">My_company.report_medicine_order_template</field>
+            <field name="binding_model_id" ref="model_medical_medicine"/>
+        </record>
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="drip_action" model="ir.actions.act_window">
+            <field name="name">Medicine view</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">medical.medicine</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('medicine_type', '=', 'drip')]</field>
+
+        </record>
+
+
+        <menuitem id="drip_id" name="Drip" parent="menu_item_medicine" action="drip_action"
+                  sequence="06"/>
+
+    </data>
+</odoo>
+

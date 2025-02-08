@@ -1,0 +1,27 @@
+<odoo>
+    <template id="DashboardTemplate">
+        <div class="dashboard-container">
+            <h2>Sales Order Dashboard</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order Sequence</th>
+                        <th>Customer Name</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="state.saleOrders" t-as="order">
+                        <tr>
+                            <td t-esc="order.sequence_sale"></td>
+                            <td t-esc="order.customer_name"></td>
+                            <td t-esc="order.total_amount"></td>
+                            <td t-esc="order.state"></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </template>
+</odoo>

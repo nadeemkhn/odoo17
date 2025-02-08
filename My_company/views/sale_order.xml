@@ -1,0 +1,252 @@
+<odoo>
+    <record id="view_sale_order_form" model="ir.ui.view">
+        <field name="name">medical.sale.order.form</field>
+        <field name="model">medical.sale.order</field>
+        <field name="arch" type="xml">
+            <form string="Sale Order">
+
+                <header>
+                    <button name="action_generate_report" type="object" string="Print Report"
+                            class="btn btn-primary"/>
+
+
+                    <button name="action_draft" string="Set to Quotation" type="object" class="btn-success"
+                            invisible="state not in ('cancel','sent')"/>
+                    <button name="action_sent" string="send by Email" type="object" class="btn-primary"
+                            invisible="state not in ('draft', 'sale')"/>
+                    <button name="action_cancel" string="Cancel" type="object" class="btn-danger"
+                            invisible="state not in ('sale')"/>
+
+                    <button name="acton_done" string="Done" type="object" class="btn-primary"
+                            invisible="state not in ('')"/>
+                    <button name="action_sale" string="Confirm" type="object" class="btn-success"
+                            invisible="state not in ('draft')"/>
+
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
+
+
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_delivery" type="object"
+                                icon="fa-truck" invisible="delivery_count == 0"
+                                style="display: block; margin-left: auto; margin-right: auto;">
+                            <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                        </button>
+
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sequence_sale" readonly="1"/>
+                        </h1>
+                    </div>
+                    <div>
+                        <field name="priority" widget="priority"/>
+                    </div>
+                    <group>
+                        <field name="customer_id" required="1"/>
+                        <field name="sale_date" required="1"/>
+
+                    </group>
+                    <notebook>
+                        <page string="Medicines">
+                            <field name="medicine_line_ids" required="1">
+                                <tree editable="bottom" string="Medicines">
+                                    <field name="medicine_id"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="price"/>
+                                    <field name="subtotal"/>
+
+
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group>
+                        <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sale_order_tree" model="ir.ui.view">
+        <field name="name">medical.sale.order.tree</field>
+        <field name="model">medical.sale.order</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state == 'cancel' "
+                  decoration-success="state == 'sale' "
+                  decoration-info="state == 'draft' "
+                  decoration-primary="state == 'sent' "
+                  string="Sale Orders"
+                  multi_edit="1">
+                <field name="sequence_sale"/>
+                <field name="priority"/>
+                <field name="delivery_id"/>
+                <field name="customer_id"/>
+                <field name="sale_date"/>
+                <field name="activity_ids" widget="list_activity"/>
+                <field name="total_amount"/>
+                <field name="state"
+                       widget="badge" decoration-danger="state == 'cancel' "
+                       decoration-success="state == 'sale' "
+                       decoration-info="state == 'draft' "
+                       decoration-primary="state == 'sent' "
+                />
+
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="medical_sale_search_id" model="ir.ui.view">
+        <field name="name">Search View</field>
+        <field name="model">medical.sale.order</field>
+        <field name="arch" type="xml">
+            <search string="">
+                <group expand="1" string="Group By">
+                    <filter name="group_by_customer" string="Customer" context="{'group_by': 'customer_id'}"/>
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                </group>
+                <separator/>
+                <filter name="state_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+
+                <filter name="state_confirm" string="Confirm" domain="[('state', '=', 'sale')]"/>
+                <separator/>
+
+                <filter name="state_done" string="Done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter name="state_done" string="Done" domain="[('state', '=', 'sent')]"/>
+                <separator/>
+
+                <filter name="state_cancel" string="Cancel" domain="[('state', '=', 'cancel')]"/>
+
+                <field name="customer_id" string="Customer"/>
+                <field name="sequence_sale" string="Sequence"/>
+
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_order1_kanban_view_id" model="ir.ui.view">
+        <field name="name">Kanban View</field>
+        <field name="model">medical.sale.order</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb16">
+                                <div class="o_kanban_record_headings mt4">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="customer_id"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left text-muted">
+                                    <span>
+                                        <field name="sequence_sale"/>
+                                    </span>
+                                    <span>
+                                        <field name="sale_date"/>
+                                    </span>
+                                    <field name="activity_ids" widget="kanban_activity"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="state" widget="label_selection"
+                                           options="{'classes': {'draft': 'info', 'cancel': 'danger', 'sent': 'success', 'sale' : 'primary','done':'success',}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+
+        </field>
+    </record>
+
+    <record id="view_sale_order_medical_calendar" model="ir.ui.view">
+        <field name="name">sale.order.calendar</field>
+        <field name="model">medical.sale.order</field>
+        <field name="arch" type="xml">
+            <calendar string="sale calender" color="state" create="0" mode="month" date_start="activity_date_deadline"
+                      hide_time="true" event_limit="5">
+                <field name="customer_id"/>
+                <field name="total_amount" avatar_field="avatar_128"/>
+                <field name="state" filters="1" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+
+    <record id="view_sale_order_medical_pivot" model="ir.ui.view">
+        <field name="name">sale.order.pivot</field>
+        <field name="model">medical.sale.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Orders" sample="1">
+                <field name="sale_date" type="row"/>
+                <field name="total_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="medical_view_sale_order_graph" model="ir.ui.view">
+        <field name="name">sale.order.graph</field>
+        <field name="model">medical.sale.order</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Orders" sample="1">
+                <field name="customer_id"/>
+                <field name="total_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="medical_sale_view_activity" model="ir.ui.view">
+        <field name="name">sale.pass.activity</field>
+        <field name="model">medical.sale.order</field>
+        <field name="arch" type="xml">
+            <activity string="Gate pass">
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="sequence_sale" display="full"/>
+                            <field name="customer_id" muted="1" display="full"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="action_medical_sale_order" model="ir.actions.act_window">
+        <field name="name">Sale Orders</field>
+        <field name="res_model">medical.sale.order</field>
+        <field name="view_mode">kanban,tree,calendar,pivot,graph,activity,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create your first Sale Order
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="menu_medical_sale_order" name="Sale Orders"
+              parent="my_parent_menu" sequence="1"/>
+    <menuitem id="menu_sale_order" name="Sale Order"
+              parent="menu_medical_sale_order" action="action_medical_sale_order" sequence="01"/>
+    <menuitem id="wizard_sale_order-id" name="Sale Reports"
+              parent="menu_medical_sale_order" action="action_sale_order_report_wizard" sequence="02"/>
+
+
+</odoo>
